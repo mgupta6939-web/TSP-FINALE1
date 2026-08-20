@@ -14,8 +14,7 @@ const Navbar = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("userName");
     localStorage.removeItem("userId");
-    navigate("/login");
-    window.location.reload();
+    window.location.href = "/login";
   };
 
   const toggleMenu = () => setMenuOpen((prev) => !prev);
