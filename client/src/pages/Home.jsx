@@ -19,10 +19,15 @@ const Home = () => {
 
   // ====================================
   // FETCH ALL POSTS
-  // useEffect runs once when the component loads.
   // ====================================
   useEffect(() => {
     const fetchPosts = async () => {
+      // Don't fetch posts if the user is not logged in
+      if (!userId) {
+        setLoading(false);
+        return;
+      }
+      
       try {
         const response = await api.get("/posts");
         setPosts(response.data || []);
@@ -34,7 +39,7 @@ const Home = () => {
     };
 
     fetchPosts();
-  }, []); // Empty array = run only once
+  }, [userId]); 
 
   // ====================================
   // DELETE A POST
@@ -113,8 +118,15 @@ const Home = () => {
         <p>Read, write, and share your ideas with the world</p>
       </div>
 
-      {/* Show message if no posts exist */}
-      {posts.length === 0 ? (
+      {/* Show message based on authentication and posts state */}
+      {!userId ? (
+        <div style={{ textAlign: "center", marginTop: "2rem" }}>
+          <h2>Discover amazing content!</h2>
+          <p className="no-posts">
+            Please <Link to="/login" className="gradient-text" style={{ textDecoration: "none", fontWeight: "bold" }}>log in</Link> or <Link to="/register" className="gradient-text" style={{ textDecoration: "none", fontWeight: "bold" }}>register</Link> to view and create posts.
+          </p>
+        </div>
+      ) : posts.length === 0 ? (
         <p className="no-posts">No posts yet. Be the first to create one!</p>
       ) : (
         <div className="posts-list">
